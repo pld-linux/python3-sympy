@@ -1,0 +1,713 @@
+--- ./examples/advanced/autowrap_ufuncify.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./examples/advanced/autowrap_ufuncify.py	2013-12-09 12:00:00.000000000 -0700
+@@ -25,7 +25,7 @@ np = import_module('numpy')
+ if not np:
+     sys.exit("Cannot import numpy. Exiting.")
+ 
+-import sympy.mpmath as mpmath
++import mpmath
+ from sympy.utilities.autowrap import ufuncify
+ from sympy.utilities.lambdify import implemented_function
+ from sympy import symbols, legendre, Plot, pprint
+--- ./examples/advanced/pidigits.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./examples/advanced/pidigits.py	2013-12-09 12:00:00.000000000 -0700
+@@ -6,8 +6,8 @@ Example shows arbitrary precision using
+ computation of the digits of pi.
+ """
+ 
+-from sympy.mpmath import libmp, pi
+-from sympy.mpmath import functions as mpf_funs
++from mpmath import libmp, pi
++from mpmath import functions as mpf_funs
+ 
+ import math
+ from time import clock
+--- ./setup.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./setup.py	2013-12-09 12:00:00.000000000 -0700
+@@ -69,11 +69,6 @@ modules = [
+     'sympy.logic.utilities',
+     'sympy.matrices',
+     'sympy.matrices.expressions',
+-    'sympy.mpmath',
+-    'sympy.mpmath.calculus',
+-    'sympy.mpmath.functions',
+-    'sympy.mpmath.libmp',
+-    'sympy.mpmath.matrices',
+     'sympy.ntheory',
+     'sympy.parsing',
+     'sympy.physics',
+@@ -237,7 +232,6 @@ tests = [
+     'sympy.logic.tests',
+     'sympy.matrices.expressions.tests',
+     'sympy.matrices.tests',
+-    'sympy.mpmath.tests',
+     'sympy.ntheory.tests',
+     'sympy.parsing.tests',
+     'sympy.physics.hep.tests',
+--- ./sympy/combinatorics/permutations.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/combinatorics/permutations.py	2013-12-09 12:00:00.000000000 -0700
+@@ -9,7 +9,7 @@ from sympy.utilities.iterables import (f
+     has_dups, runs)
+ from sympy.polys.polytools import lcm
+ from sympy.matrices import zeros
+-from sympy.mpmath.libmp.libintmath import ifac
++from mpmath.libmp.libintmath import ifac
+ 
+ 
+ def _af_rmul(a, b):
+--- ./sympy/core/evalf.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/core/evalf.py	2013-12-09 12:00:00.000000000 -0700
+@@ -6,19 +6,19 @@ from __future__ import print_function, d
+ 
+ import math
+ 
+-import sympy.mpmath.libmp as libmp
+-from sympy.mpmath import make_mpc, make_mpf, mp, mpc, mpf, nsum, quadts, quadosc
+-from sympy.mpmath import inf as mpmath_inf
+-from sympy.mpmath.libmp import (from_int, from_man_exp, from_rational, fhalf,
++import mpmath.libmp as libmp
++from mpmath import make_mpc, make_mpf, mp, mpc, mpf, nsum, quadts, quadosc
++from mpmath import inf as mpmath_inf
++from mpmath.libmp import (from_int, from_man_exp, from_rational, fhalf,
+         fnan, fnone, fone, fzero, mpf_abs, mpf_add,
+         mpf_atan, mpf_atan2, mpf_cmp, mpf_cos, mpf_e, mpf_exp, mpf_log, mpf_lt,
+         mpf_mul, mpf_neg, mpf_pi, mpf_pow, mpf_pow_int, mpf_shift, mpf_sin,
+         mpf_sqrt, normalize, round_nearest, to_int, to_str)
+-from sympy.mpmath.libmp import bitcount as mpmath_bitcount
+-from sympy.mpmath.libmp.backend import MPZ
+-from sympy.mpmath.libmp.libmpc import _infs_nan
+-from sympy.mpmath.libmp.libmpf import dps_to_prec
+-from sympy.mpmath.libmp.gammazeta import mpf_bernoulli
++from mpmath.libmp import bitcount as mpmath_bitcount
++from mpmath.libmp.backend import MPZ
++from mpmath.libmp.libmpc import _infs_nan
++from mpmath.libmp.libmpf import dps_to_prec
++from mpmath.libmp.gammazeta import mpf_bernoulli
+ 
+ from .compatibility import SYMPY_INTS
+ from .sympify import sympify
+--- ./sympy/core/expr.py.orig	2013-12-09 11:33:19.370881936 -0700
++++ ./sympy/core/expr.py	2013-12-09 12:00:00.000000000 -0700
+@@ -8,7 +8,7 @@ from .evalf import EvalfMixin, pure_comp
+ from .decorators import _sympifyit, call_highest_priority
+ from .cache import cacheit
+ from .compatibility import reduce, as_int, default_sort_key, xrange
+-from sympy.mpmath.libmp import mpf_log, prec_to_dps
++from mpmath.libmp import mpf_log, prec_to_dps
+ 
+ from collections import defaultdict
+ 
+--- ./sympy/core/function.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/core/function.py	2013-12-09 12:00:00.000000000 -0700
+@@ -51,8 +51,8 @@ from sympy.core.compatibility import str
+ from sympy.utilities import default_sort_key
+ from sympy.utilities.iterables import uniq
+ 
+-from sympy import mpmath
+-import sympy.mpmath.libmp as mlib
++import mpmath
++import mpmath.libmp as mlib
+ 
+ 
+ def _coeff_isneg(a):
+@@ -366,7 +366,7 @@ class Function(Application, Expr):
+         try:
+             args = [arg._to_mpmath(prec + 5) for arg in self.args]
+             def bad(m):
+-                from sympy.mpmath import mpf, mpc
++                from mpmath import mpf, mpc
+                 # the precision of an mpf value is the last element
+                 # if that is 1 (and m[1] is not 1 which would indicate a
+                 # power of 2), then the eval failed; so check that none of
+@@ -1130,7 +1130,7 @@ class Derivative(Expr):
+         When we can represent derivatives at a point, this should be folded
+         into the normal evalf. For now, we need a special method.
+         """
+-        from sympy import mpmath
++        import mpmath
+         from sympy.core.expr import Expr
+         if len(self.free_symbols) != 1 or len(self.variables) != 1:
+             raise NotImplementedError('partials and higher order derivatives')
+--- ./sympy/core/numbers.py.orig	2013-12-09 11:33:19.373881932 -0700
++++ ./sympy/core/numbers.py	2013-12-09 12:00:00.000000000 -0700
+@@ -15,11 +15,11 @@ from .cache import cacheit, clear_cache
+ from sympy.core.compatibility import (
+     as_int, integer_types, long, string_types, with_metaclass, HAS_GMPY,
+     SYMPY_INTS)
+-import sympy.mpmath as mpmath
+-import sympy.mpmath.libmp as mlib
+-from sympy.mpmath.libmp import mpf_pow, mpf_pi, mpf_e, phi_fixed
+-from sympy.mpmath.ctx_mp import mpnumeric
+-from sympy.mpmath.libmp.libmpf import (
++import mpmath
++import mpmath.libmp as mlib
++from mpmath.libmp import mpf_pow, mpf_pi, mpf_e, phi_fixed
++from mpmath.ctx_mp import mpnumeric
++from mpmath.libmp.libmpf import (
+     finf as _mpf_inf, fninf as _mpf_ninf,
+     fnan as _mpf_nan, fzero as _mpf_zero, _normalize as mpf_normalize,
+     prec_to_dps)
+--- ./sympy/core/power.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/core/power.py	2013-12-09 12:00:00.000000000 -0700
+@@ -13,7 +13,7 @@ from sympy.core.function import (_coeff_
+ from sympy.core.logic import fuzzy_bool
+ from sympy.core.compatibility import as_int, xrange
+ 
+-from sympy.mpmath.libmp import sqrtrem as mpmath_sqrtrem
++from mpmath.libmp import sqrtrem as mpmath_sqrtrem
+ from sympy.utilities.iterables import sift
+ 
+ 
+--- ./sympy/core/sets.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/core/sets.py	2013-12-09 12:00:00.000000000 -0700
+@@ -9,7 +9,7 @@ from sympy.core.evalf import EvalfMixin
+ from sympy.core.numbers import Float
+ from sympy.core.compatibility import iterable, with_metaclass
+ 
+-from sympy.mpmath import mpi, mpf
++from mpmath import mpi, mpf
+ from sympy.assumptions import ask
+ from sympy.logic.boolalg import And, Or, true, false
+ 
+--- ./sympy/core/tests/test_evalf.py.orig	2013-12-09 11:33:19.375881929 -0700
++++ ./sympy/core/tests/test_evalf.py	2013-12-09 12:00:00.000000000 -0700
+@@ -3,9 +3,9 @@ from sympy import (Add, ceiling, cos, E,
+                    sin, sqrt, sstr, Sum, sympify, S, integrate, atan, product)
+ from sympy.core.evalf import complex_accuracy, PrecisionExhausted, scaled_zero
+ from sympy.core.compatibility import long
+-from sympy.mpmath import inf, ninf, nan
++from mpmath import inf, ninf, nan
+ from sympy.abc import n, x, y
+-from sympy.mpmath.libmp.libmpf import from_float
++from mpmath.libmp.libmpf import from_float
+ from sympy.utilities.pytest import raises, XFAIL
+ 
+ 
+--- ./sympy/core/tests/test_numbers.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/core/tests/test_numbers.py	2013-12-09 12:00:00.000000000 -0700
+@@ -6,9 +6,9 @@ from sympy.core.basic import _aresame
+ from sympy.core.compatibility import long, u
+ from sympy.core.power import integer_nthroot
+ from sympy.core.numbers import igcd, ilcm, igcdex, seterr, _intcache, mpf_norm
+-from sympy.mpmath import mpf
++from mpmath import mpf
+ from sympy.utilities.pytest import XFAIL, slow, raises
+-from sympy import mpmath
++import mpmath
+ 
+ 
+ def test_integers_cache():
+@@ -1319,8 +1319,8 @@ def test_issue_1073():
+ 
+ @XFAIL
+ def test_mpmath_issues():
+-    from sympy.mpmath.libmp.libmpf import _normalize
+-    import sympy.mpmath.libmp as mlib
++    from mpmath.libmp.libmpf import _normalize
++    import mpmath.libmp as mlib
+     rnd = mlib.round_nearest
+     mpf = (0, long(0), -123, -1, 53, rnd)  # nan
+     assert _normalize(mpf, 53) != (0, long(0), 0, 0)
+@@ -1329,7 +1329,7 @@ def test_mpmath_issues():
+     mpf = (1, long(0), -789, -3, 53, rnd)  # -inf
+     assert _normalize(mpf, 53) != (0, long(0), 0, 0)
+ 
+-    from sympy.mpmath.libmp.libmpf import fnan
++    from mpmath.libmp.libmpf import fnan
+     assert mlib.mpf_eq(fnan, fnan)
+ 
+ 
+@@ -1360,7 +1360,7 @@ def test_int_NumberSymbols():
+ 
+ 
+ def test_3541():
+-    from sympy.mpmath.libmp.libmpf import (
++    from mpmath.libmp.libmpf import (
+         _normalize as mpf_normalize, finf, fninf, fzero)
+     # fnan is not included because Float no longer returns fnan,
+     # but otherwise, the same sort of test could apply
+--- ./sympy/core/tests/test_sets.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/core/tests/test_sets.py	2013-12-09 12:00:00.000000000 -0700
+@@ -2,7 +2,7 @@ from sympy import (Symbol, Set, Union, I
+     GreaterThan, LessThan, Max, Min, And, Or, Eq, Ge, Le, Gt, Lt, Float,
+     FiniteSet, Intersection, imageset, I, true, false
+ )
+-from sympy.mpmath import mpi
++from mpmath import mpi
+ 
+ from sympy.utilities.pytest import raises
+ from sympy.utilities.pytest import raises, XFAIL
+--- ./sympy/core/tests/test_sympify.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/core/tests/test_sympify.py	2013-12-09 12:00:00.000000000 -0700
+@@ -11,7 +11,7 @@ from sympy.functions.combinatorial.facto
+ from sympy.abc import _clash, _clash1, _clash2
+ from sympy.core.compatibility import exec_, HAS_GMPY
+ 
+-from sympy import mpmath
++import mpmath
+ 
+ 
+ def test_439():
+--- ./sympy/core/tests/test_wester.py.orig	2013-12-09 11:33:19.380881923 -0700
++++ ./sympy/core/tests/test_wester.py	2013-12-09 12:00:00.000000000 -0700
+@@ -6,6 +6,7 @@ See also http://math.unm.edu/~wester/cas
+ each tested system.
+ """
+ 
++import mpmath
+ from sympy import (Rational, symbols, factorial, sqrt, log, exp, oo, zoo,
+     product, binomial, rf, pi, gamma, igcd, factorint, radsimp, combsimp,
+     npartitions, totient, primerange, factor, simplify, gcd, resultant, expand,
+@@ -13,7 +14,7 @@ from sympy import (Rational, symbols, fa
+     bernoulli, hyper, hyperexpand, besselj, asin, assoc_legendre, Function, re,
+     im, DiracDelta, chebyshevt, legendre_poly, polylog, series, O,
+     atan, sinh, cosh, tanh, floor, ceiling, solve, asinh, acot, csc, sec,
+-    LambertW, N, apart, sqrtdenest, factorial2, powdenest, Mul, S, mpmath, ZZ,
++    LambertW, N, apart, sqrtdenest, factorial2, powdenest, Mul, S, ZZ,
+     Poly, expand_func, E, Q, And, Or, Ne, Eq, Le, Lt,
+     ask, refine, AlgebraicNumber,
+     elliptic_e, elliptic_f, powsimp, hessian, wronskian, fibonacci, sign,
+@@ -24,7 +25,7 @@ from sympy.functions.special.zeta_functi
+ from sympy.integrals.deltafunctions import deltaintegrate
+ from sympy.utilities.pytest import XFAIL, slow
+ from sympy.utilities.iterables import partitions
+-from sympy.mpmath import mpi, mpc
++from mpmath import mpi, mpc
+ from sympy.matrices import Matrix, GramSchmidt, eye
+ from sympy.matrices.expressions.blockmatrix import BlockMatrix, block_collapse
+ from sympy.matrices.expressions import MatrixSymbol, ZeroMatrix
+--- ./sympy/external/tests/test_numpy.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/external/tests/test_numpy.py	2013-12-09 12:00:00.000000000 -0700
+@@ -27,7 +27,7 @@ from sympy import (Rational, Symbol, lis
+         symarray, symbols, Integer)
+ import sympy
+ 
+-from sympy import mpmath
++import mpmath
+ from sympy.abc import x, y, z
+ from sympy.utilities.decorator import conserve_mpmath_dps
+ 
+--- ./sympy/functions/combinatorial/numbers.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/functions/combinatorial/numbers.py	2013-12-09 12:00:00.000000000 -0700
+@@ -15,8 +15,8 @@ from sympy.core.compatibility import as_
+ from sympy.core.cache import cacheit
+ from sympy.functions.combinatorial.factorials import factorial
+ 
+-from sympy.mpmath import bernfrac
+-from sympy.mpmath.libmp import ifib as _ifib
++from mpmath import bernfrac
++from mpmath.libmp import ifib as _ifib
+ 
+ 
+ def _product(a, b):
+@@ -635,7 +635,7 @@ class euler(Function):
+         if m.is_odd:
+             return S.Zero
+         if m.is_Integer and m.is_nonnegative:
+-            from sympy.mpmath import mp
++            from mpmath import mp
+             m = m._to_mpmath(mp.prec)
+             res = mp.eulernum(m, exact=True)
+             return Integer(res)
+@@ -654,7 +654,7 @@ class euler(Function):
+         m = self.args[0]
+ 
+         if m.is_Integer and m.is_nonnegative:
+-            from sympy.mpmath import mp
++            from mpmath import mp
+             from sympy import Expr
+             m = m._to_mpmath(prec)
+             oprec = mp.prec
+--- ./sympy/functions/special/bessel.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/functions/special/bessel.py	2013-12-09 12:00:00.000000000 -0700
+@@ -708,8 +708,8 @@ def jn_zeros(n, k, method="sympy", dps=1
+     from math import pi
+ 
+     if method == "sympy":
+-        from sympy.mpmath import besseljzero
+-        from sympy.mpmath.libmp.libmpf import dps_to_prec
++        from mpmath import besseljzero
++        from mpmath.libmp.libmpf import dps_to_prec
+         from sympy import Expr
+         prec = dps_to_prec(dps)
+         return [Expr._from_mpmath(besseljzero(S(n + 0.5)._to_mpmath(prec),
+--- ./sympy/functions/special/error_functions.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/functions/special/error_functions.py	2013-12-09 12:00:00.000000000 -0700
+@@ -1323,7 +1323,7 @@ class li(Function):
+ 
+     We can even compute Soldner's constant by the help of mpmath:
+ 
+-    >>> from sympy.mpmath import findroot
++    >>> from mpmath import findroot
+     >>> findroot(li, 2)
+     1.45136923488338
+ 
+--- ./sympy/functions/special/gamma_functions.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/functions/special/gamma_functions.py	2013-12-09 12:00:00.000000000 -0700
+@@ -228,7 +228,7 @@ class lowergamma(Function):
+                     return (cls(a + 1, x) + x**a * C.exp(-x))/a
+ 
+     def _eval_evalf(self, prec):
+-        from sympy.mpmath import mp
++        from mpmath import mp
+         from sympy import Expr
+         a = self.args[0]._to_mpmath(prec)
+         z = self.args[1]._to_mpmath(prec)
+@@ -320,7 +320,7 @@ class uppergamma(Function):
+             raise ArgumentIndexError(self, argindex)
+ 
+     def _eval_evalf(self, prec):
+-        from sympy.mpmath import mp
++        from mpmath import mp
+         from sympy import Expr
+         a = self.args[0]._to_mpmath(prec)
+         z = self.args[1]._to_mpmath(prec)
+--- ./sympy/functions/special/hyper.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/functions/special/hyper.py	2013-12-09 12:00:00.000000000 -0700
+@@ -602,7 +602,8 @@ class meijerg(TupleParametersBase):
+         # (carefully so as not to loose the branch information), and evaluate
+         # G(z'**(1/r)) = G(z'**n) = G(z).
+         from sympy.functions import exp_polar, ceiling
+-        from sympy import mpmath, Expr
++        from sympy import Expr
++        import mpmath
+         z = self.argument
+         znum = self.argument._eval_evalf(prec)
+         if znum.has(exp_polar):
+--- ./sympy/functions/special/spherical_harmonics.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/functions/special/spherical_harmonics.py	2013-12-09 12:00:00.000000000 -0700
+@@ -219,7 +219,7 @@ class Ynm(Function):
+         # Note: works without this function by just calling
+         #       mpmath for Legendre polynomials. But using
+         #       the dedicated function directly is cleaner.
+-        from sympy.mpmath import mp
++        from mpmath import mp
+         from sympy import Expr
+         n = self.args[0]._to_mpmath(prec)
+         m = self.args[1]._to_mpmath(prec)
+--- ./sympy/liealgebras/weyl_group.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/liealgebras/weyl_group.py	2013-12-09 12:00:00.000000000 -0700
+@@ -3,7 +3,7 @@
+ from sympy.core import Basic, Rational
+ from sympy.core.numbers import igcd
+ from .cartan_type import CartanType
+-from sympy.mpmath import fac
++from mpmath import fac
+ from operator import itemgetter
+ from itertools import groupby
+ from sympy.matrices import Matrix, eye
+--- ./sympy/matrices/matrices.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/matrices/matrices.py	2013-12-09 12:00:00.000000000 -0700
+@@ -1259,7 +1259,7 @@ class MatrixBase(object):
+         """Solve the linear system Ax = rhs for x where A = self.
+ 
+         This is for symbolic matrices, for real or complex ones use
+-        sympy.mpmath.lu_solve or sympy.mpmath.qr_solve.
++        mpmath.lu_solve or mpmath.qr_solve.
+ 
+         See Also
+         ========
+@@ -1636,7 +1636,7 @@ class MatrixBase(object):
+         to use QRsolve.
+ 
+         This is mainly for educational purposes and symbolic matrices, for real
+-        (or complex) matrices use sympy.mpmath.qr_solve.
++        (or complex) matrices use mpmath.qr_solve.
+ 
+         See Also
+         ========
+--- ./sympy/ntheory/partitions_.py.orig	2013-12-09 11:33:19.386881915 -0700
++++ ./sympy/ntheory/partitions_.py	2013-12-09 12:00:00.000000000 -0700
+@@ -1,6 +1,6 @@
+ from __future__ import print_function, division
+ 
+-from sympy.mpmath.libmp import (fzero,
++from mpmath.libmp import (fzero,
+     from_man_exp, from_int, from_rational,
+     fone, fhalf, bitcount, to_int, to_str, mpf_mul, mpf_div, mpf_sub,
+     mpf_add, mpf_sqrt, mpf_pi, mpf_cosh_sinh, pi_fixed, mpf_cos)
+--- ./sympy/physics/quantum/constants.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/physics/quantum/constants.py	2013-12-09 12:00:00.000000000 -0700
+@@ -6,7 +6,7 @@ from sympy.core.numbers import NumberSym
+ from sympy.core.singleton import Singleton
+ from sympy.core.compatibility import u, with_metaclass
+ from sympy.printing.pretty.stringpict import prettyForm
+-import sympy.mpmath.libmp as mlib
++import mpmath.libmp as mlib
+ 
+ #-----------------------------------------------------------------------------
+ # Constants
+--- ./sympy/physics/quantum/qubit.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/physics/quantum/qubit.py	2013-12-09 12:00:00.000000000 -0700
+@@ -24,7 +24,7 @@ from sympy.physics.quantum.represent imp
+ from sympy.physics.quantum.matrixutils import (
+     numpy_ndarray, scipy_sparse_matrix
+ )
+-from sympy.mpmath.libmp.libintmath import bitcount
++from mpmath.libmp.libintmath import bitcount
+ 
+ __all__ = [
+     'Qubit',
+--- ./sympy/polys/domains/groundtypes.py.orig	2013-12-09 11:33:19.387881913 -0700
++++ ./sympy/polys/domains/groundtypes.py	2013-12-09 12:00:00.000000000 -0700
+@@ -69,7 +69,7 @@ else:
+     gmpy_qdiv = None
+ 
+ 
+-import sympy.mpmath.libmp as mlib
++import mpmath.libmp as mlib
+ 
+ 
+ def python_sqrt(n):
+--- ./sympy/polys/domains/mpelements.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/polys/domains/mpelements.py	2013-12-09 12:00:00.000000000 -0700
+@@ -4,11 +4,11 @@ from __future__ import print_function, d
+ 
+ from sympy.polys.domains.domainelement import DomainElement
+ 
+-from sympy.mpmath.ctx_mp_python import PythonMPContext, _mpf, _mpc, _constant
+-from sympy.mpmath.libmp import (MPZ_ONE, fzero, fone, finf, fninf, fnan,
++from mpmath.ctx_mp_python import PythonMPContext, _mpf, _mpc, _constant
++from mpmath.libmp import (MPZ_ONE, fzero, fone, finf, fninf, fnan,
+     round_nearest, mpf_mul, mpf_abs, mpf_lt, mpc_abs, repr_dps, int_types,
+     from_int, from_float, from_str, to_rational)
+-from sympy.mpmath.rational import mpq
++from mpmath.rational import mpq
+ 
+ from sympy.utilities import public
+ 
+--- ./sympy/polys/modulargcd.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/polys/modulargcd.py	2013-12-09 12:00:00.000000000 -0700
+@@ -7,7 +7,7 @@ from sympy.polys.polyerrors import Modul
+ from sympy.polys.domains import PolynomialRing
+ 
+ from sympy.core.compatibility import xrange
+-from sympy.mpmath import sqrt
++from mpmath import sqrt
+ from sympy import Dummy
+ import random
+ 
+--- ./sympy/polys/numberfields.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/polys/numberfields.py	2013-12-09 12:00:00.000000000 -0700
+@@ -43,7 +43,7 @@ from sympy.core.exprtools import Factors
+ from sympy.simplify.simplify import _mexpand, _is_sum_surds
+ from sympy.ntheory import sieve
+ from sympy.ntheory.factor_ import divisors
+-from sympy.mpmath import pslq, mp
++from mpmath import pslq, mp
+ 
+ from sympy.core.compatibility import reduce
+ from sympy.core.compatibility import xrange
+--- ./sympy/polys/polytools.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/polys/polytools.py	2013-12-09 12:00:00.000000000 -0700
+@@ -47,7 +47,7 @@ from sympy.polys.polyerrors import (
+ from sympy.utilities import group, sift, public
+ 
+ import sympy.polys
+-import sympy.mpmath
++import mpmath
+ 
+ from sympy.polys.domains import FF, QQ
+ from sympy.polys.constructor import construct_domain
+@@ -3220,17 +3220,17 @@ class Poly(Expr):
+         coeffs = [coeff.evalf(n=n).as_real_imag()
+                   for coeff in f.all_coeffs()]
+ 
+-        dps = sympy.mpmath.mp.dps
+-        sympy.mpmath.mp.dps = n
++        dps = mpmath.mp.dps
++        mpmath.mp.dps = n
+ 
+         try:
+             try:
+-                coeffs = [sympy.mpmath.mpc(*coeff) for coeff in coeffs]
++                coeffs = [mpmath.mpc(*coeff) for coeff in coeffs]
+             except TypeError:
+                 raise DomainError(
+                     "numerical domain expected, got %s" % f.rep.dom)
+ 
+-            result = sympy.mpmath.polyroots(
++            result = mpmath.polyroots(
+                 coeffs, maxsteps=maxsteps, cleanup=cleanup, error=error)
+ 
+             if error:
+@@ -3240,7 +3240,7 @@ class Poly(Expr):
+ 
+             roots = list(map(sympify, sorted(roots, key=lambda r: (r.real, r.imag))))
+         finally:
+-            sympy.mpmath.mp.dps = dps
++            mpmath.mp.dps = dps
+ 
+         if error is not None:
+             return roots, sympify(error)
+--- ./sympy/polys/rootoftools.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/polys/rootoftools.py	2013-12-09 12:00:00.000000000 -0700
+@@ -25,8 +25,8 @@ from sympy.polys.polyerrors import (
+ 
+ from sympy.polys.domains import QQ
+ 
+-from sympy.mpmath import mp, mpf, mpc, findroot
+-from sympy.mpmath.libmp.libmpf import prec_to_dps
++from mpmath import mp, mpf, mpc, findroot
++from mpmath.libmp.libmpf import prec_to_dps
+ 
+ from sympy.utilities import lambdify, public
+ 
+--- ./sympy/printing/latex.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/printing/latex.py	2013-12-09 12:00:00.000000000 -0700
+@@ -15,8 +15,8 @@ from .printer import Printer
+ from .conventions import split_super_sub, requires_partial
+ from .precedence import precedence, PRECEDENCE
+ 
+-import sympy.mpmath.libmp as mlib
+-from sympy.mpmath.libmp import prec_to_dps
++import mpmath.libmp as mlib
++from mpmath.libmp import prec_to_dps
+ 
+ from sympy.core.compatibility import default_sort_key, xrange
+ from sympy.utilities.iterables import has_variety
+--- ./sympy/printing/repr.py.orig	2013-12-09 11:33:19.393881905 -0700
++++ ./sympy/printing/repr.py	2013-12-09 12:00:00.000000000 -0700
+@@ -9,8 +9,8 @@ from __future__ import print_function, d
+ 
+ from sympy.core.function import AppliedUndef
+ from .printer import Printer
+-import sympy.mpmath.libmp as mlib
+-from sympy.mpmath.libmp import prec_to_dps, repr_dps
++import mpmath.libmp as mlib
++from mpmath.libmp import prec_to_dps, repr_dps
+ 
+ 
+ class ReprPrinter(Printer):
+--- ./sympy/printing/str.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/printing/str.py	2013-12-09 12:00:00.000000000 -0700
+@@ -10,8 +10,8 @@ from sympy.core.numbers import Integer
+ from .printer import Printer
+ from sympy.printing.precedence import precedence, PRECEDENCE
+ 
+-import sympy.mpmath.libmp as mlib
+-from sympy.mpmath.libmp import prec_to_dps
++import mpmath.libmp as mlib
++from mpmath.libmp import prec_to_dps
+ 
+ from sympy.utilities import default_sort_key
+ 
+--- ./sympy/simplify/simplify.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/simplify/simplify.py	2013-12-09 12:00:00.000000000 -0700
+@@ -33,7 +33,7 @@ from sympy.ntheory.factor_ import multip
+ from sympy.polys import (Poly, together, reduced, cancel, factor,
+     ComputationFailed, lcm, gcd)
+ 
+-import sympy.mpmath as mpmath
++import mpmath
+ 
+ 
+ def _mexpand(expr):
+--- ./sympy/solvers/solvers.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/solvers/solvers.py	2013-12-09 12:00:00.000000000 -0700
+@@ -47,7 +47,7 @@ from sympy.utilities.lambdify import lam
+ from sympy.utilities.misc import filldedent
+ from sympy.utilities.iterables import uniq
+ 
+-from sympy.mpmath import findroot
++from mpmath import findroot
+ 
+ from sympy.solvers.polysys import solve_poly_system
+ from sympy.solvers.inequalities import reduce_inequalities
+@@ -2283,8 +2283,8 @@ def nsolve(*args, **kwargs):
+     Overdetermined systems are supported.
+ 
+     >>> from sympy import Symbol, nsolve
+-    >>> import sympy
+-    >>> sympy.mpmath.mp.dps = 15
++    >>> import mpmath, sympy
++    >>> mpmath.mp.dps = 15
+     >>> x1 = Symbol('x1')
+     >>> x2 = Symbol('x2')
+     >>> f1 = 3 * x1**2 - 2 * x2**2 - 1
+--- ./sympy/solvers/tests/test_numeric.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/solvers/tests/test_numeric.py	2013-12-09 12:00:00.000000000 -0700
+@@ -1,5 +1,5 @@
+ from sympy import Eq, Matrix, pi, sin, sqrt, Symbol, Integral, Piecewise, symbols
+-from sympy.mpmath import mnorm, mpf
++from mpmath import mnorm, mpf
+ from sympy.solvers import nsolve
+ from sympy.utilities.lambdify import lambdify
+ from sympy.utilities.pytest import raises, XFAIL
+--- ./sympy/statistics/distributions.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/statistics/distributions.py	2013-12-09 12:00:00.000000000 -0700
+@@ -212,7 +212,7 @@ class Normal(ContinuousProbability):
+         # error function is not yet implemented in SymPy but can easily be
+         # computed numerically
+ 
+-        from sympy.mpmath import mpf, erfinv
++        from mpmath import mpf, erfinv
+ 
+         # calculate y = ierf(p) by solving erf(y) - p = 0
+         y = erfinv(mpf(p))
+--- ./sympy/statistics/tests/test_statistics.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/statistics/tests/test_statistics.py	2013-12-09 12:00:00.000000000 -0700
+@@ -3,7 +3,7 @@ from sympy.functions import erf
+ 
+ from operator import abs
+ 
+-from sympy.mpmath import mp
++from mpmath import mp
+ 
+ from sympy.utilities.tests.test_pickling import check
+ 
+--- ./sympy/utilities/decorator.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/utilities/decorator.py	2013-12-09 12:00:00.000000000 -0700
+@@ -81,7 +81,7 @@ def conserve_mpmath_dps(func):
+     """After the function finishes, resets the value of mpmath.mp.dps to
+     the value it had before the function was run."""
+     import functools
+-    from sympy import mpmath
++    import mpmath
+ 
+     def func_wrapper():
+         dps = mpmath.mp.dps
+--- ./sympy/utilities/lambdify.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/utilities/lambdify.py	2013-12-09 12:00:00.000000000 -0700
+@@ -86,7 +86,7 @@ NUMPY_TRANSLATIONS = {
+ # Available modules:
+ MODULES = {
+     "math": (MATH, MATH_DEFAULT, MATH_TRANSLATIONS, ("from math import *",)),
+-    "mpmath": (MPMATH, MPMATH_DEFAULT, MPMATH_TRANSLATIONS, ("from sympy.mpmath import *",)),
++    "mpmath": (MPMATH, MPMATH_DEFAULT, MPMATH_TRANSLATIONS, ("from mpmath import *",)),
+     "numpy": (NUMPY, NUMPY_DEFAULT, NUMPY_TRANSLATIONS, ("import_module('numpy')",)),
+     "sympy": (SYMPY, SYMPY_DEFAULT, {}, (
+         "from sympy.functions import *",
+--- ./sympy/utilities/runtests.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/utilities/runtests.py	2013-12-09 12:00:00.000000000 -0700
+@@ -571,7 +571,7 @@ def _doctest(*paths, **kwargs):
+     split  = kwargs.get('split', None)
+     blacklist.extend([
+         "doc/src/modules/mpmath",  # needs to be fixed upstream
+-        "sympy/mpmath",  # needs to be fixed upstream
++        "mpmath",  # needs to be fixed upstream
+         "doc/src/modules/plotting.rst",  # generates live plots
+         "sympy/statistics",                # prints a deprecation
+         "doc/src/modules/statistics.rst",  # warning (the module is deprecated)
+--- ./sympy/utilities/tests/diagnose_imports.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/utilities/tests/diagnose_imports.py	2013-12-09 12:00:00.000000000 -0700
+@@ -117,7 +117,7 @@ if __name__ == "__main__":
+         """Is module relevant for import checking?
+ 
+         Only imports between relevant modules will be checked."""
+-        return in_module(module, 'sympy') and not in_module(module, 'sympy.mpmath')
++        return in_module(module, 'sympy') and not in_module(module, 'mpmath')
+ 
+     sorted_messages = []
+ 
+--- ./sympy/utilities/tests/test_lambdify.py.orig	2013-12-08 17:31:28.000000000 -0700
++++ ./sympy/utilities/tests/test_lambdify.py	2013-12-09 12:00:00.000000000 -0700
+@@ -3,7 +3,7 @@ from sympy import (
+     symbols, lambdify, sqrt, sin, cos, pi, atan, Rational, Float,
+     Matrix, Lambda, exp, Integral, oo, I, Abs, Function, true, false)
+ from sympy.printing.lambdarepr import LambdaPrinter
+-from sympy import mpmath
++import mpmath
+ from sympy.utilities.lambdify import implemented_function
+ from sympy.utilities.pytest import skip
+ from sympy.utilities.decorator import conserve_mpmath_dps
