@@ -7,7 +7,7 @@
 Summary:	A Python library for symbolic mathematics
 Name:		python-sympy
 Version:	0.7.4
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy-%{version}.tar.gz
