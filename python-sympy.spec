@@ -7,7 +7,7 @@
 Summary:	A Python library for symbolic mathematics
 Name:		python-sympy
 Version:	0.7.4
-Release:	5
+Release:	6
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy-%{version}.tar.gz
@@ -15,6 +15,7 @@ Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy
 # Upstream tried to graft in another project as a private copy; we rip
 # it out (rhbz# 551576):
 Patch0:		strip-internal-mpmath.patch
+Patch1:		sympy-doc.patch
 URL:		http://sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
@@ -69,6 +70,7 @@ HTML documentation for sympy.
 %prep
 %setup -q -n sympy-%{version}
 %patch0
+%patch1 -p1
 %{__rm} -rf sympy/mpmath doc/src/modules/mpmath
 
 %build
