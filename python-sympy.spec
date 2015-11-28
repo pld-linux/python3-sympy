@@ -75,11 +75,11 @@ HTML documentation for sympy.
 
 %build
 %if %{with python2}
-%{__python} setup.py build --build-base build-2 %{?with_tests:test}
+%py_build %{?with_tests:test}
 %endif
 
 %if %{with python3}
-%{__python3} setup.py build --build-base build-3 %{?with_tests:test}
+%py3_build %{?with_tests:test}
 %endif
 
 # Build the documentation
@@ -91,11 +91,7 @@ cd doc
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with python3}
-%{__python3} setup.py \
-	build --build-base build-3 \
-	install --skip-build \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+%py3_install
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/isympy{,3}
 
@@ -106,11 +102,7 @@ find $RPM_BUILD_ROOT%{_examplesdir}/python3-sympy-%{version} -name '*.py' \
 %endif
 
 %if %{with python2}
-%{__python} setup.py \
-	build --build-base build-2 \
-	install --skip-build \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+%py_install
 
 %py_postclean
 
