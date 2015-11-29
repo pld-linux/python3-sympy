@@ -17,6 +17,7 @@ Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy
 Patch0:		strip-internal-mpmath.patch
 Patch1:		sympy-doc.patch
 URL:		http://sympy.org/
+BuildRequires:	rpmbuild(macros) >= 1.710
 BuildRequires:	gettext
 BuildRequires:	graphviz
 %if %{with python2}
