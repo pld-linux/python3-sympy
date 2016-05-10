@@ -7,7 +7,7 @@
 Summary:	A Python library for symbolic mathematics
 Name:		python-sympy
 Version:	1.0
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy-%{version}.tar.gz
@@ -30,6 +30,8 @@ BuildRequires:	python3-devel-tools
 BuildRequires:	python3-mpmath
 BuildRequires:	python3-numpy
 %endif
+BuildRequires:	sphinx-pdg
+BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
 BuildRequires:	texlive-latex-pgf
 Requires:	python-matplotlib
