@@ -30,6 +30,7 @@ BuildRequires:	python3-devel-tools
 BuildRequires:	python3-mpmath
 BuildRequires:	python3-numpy
 %endif
+BuildRequires:	pydoc
 BuildRequires:	sphinx-pdg
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
