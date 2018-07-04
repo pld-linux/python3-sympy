@@ -6,12 +6,12 @@
 
 Summary:	A Python library for symbolic mathematics
 Name:		python-sympy
-Version:	1.0
-Release:	4
+Version:	1.1.1
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy-%{version}.tar.gz
-# Source0-md5:	43e797de799f00f9e8fd2307dba9fab1
+# Source0-md5:	c410a9c2346878716d16ec873d72e72a
 Patch0:		docs-build.patch
 URL:		http://sympy.org/
 BuildRequires:	rpmbuild(macros) >= 1.710
