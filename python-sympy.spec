@@ -1,41 +1,53 @@
 #
 # Conditional build:
-%bcond_without	tests	# do not perform "make test"
+%bcond_without	doc	# HTML and PDF documentation
+%bcond_without	tests	# unit tests
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
-Summary:	A Python library for symbolic mathematics
+Summary:	Python 2 library for symbolic mathematics
+Summary(pl.UTF-8):	Biblioteka Pythona 2 do matematyki symbolicznej
 Name:		python-sympy
-Version:	1.1.1
+Version:	1.4
 Release:	1
 License:	BSD
 Group:		Libraries/Python
+#Source0Download: https://github.com/sympy/sympy/releases
 Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy-%{version}.tar.gz
-# Source0-md5:	c410a9c2346878716d16ec873d72e72a
-Patch0:		docs-build.patch
-URL:		http://sympy.org/
-BuildRequires:	rpmbuild(macros) >= 1.710
+# Source0-md5:	478072d75b564c9356990e3027d464e6
+Patch0:		%{name}-nodisplay.patch
+URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
+BuildRequires:	rpmbuild(macros) >= 1.714
+BuildRequires:	sed >= 4.0
 %if %{with python2}
-BuildRequires:	python-Sphinx
-BuildRequires:	python-devel
-BuildRequires:	python-mpmath
+BuildRequires:	python-devel >= 1:2.7
+BuildRequires:	python-setuptools
+%if %{with tests}
+BuildRequires:	python-devel-tools
+BuildRequires:	python-mpmath >= 0.19
 BuildRequires:	python-numpy
 %endif
+%endif
 %if %{with python3}
-BuildRequires:	python3-Sphinx
-BuildRequires:	python3-devel
+BuildRequires:	python3-devel >= 1:3.4
+BuildRequires:	python3-setuptools
+%if %{with tests}
 BuildRequires:	python3-devel-tools
-BuildRequires:	python3-mpmath
+BuildRequires:	python3-mpmath >= 0.19
 BuildRequires:	python3-numpy
 %endif
+%endif
+%if %{with doc}
 BuildRequires:	pydoc3
 BuildRequires:	sphinx-pdg
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
 BuildRequires:	texlive-latex-pgf
+%endif
 Requires:	python-matplotlib
+Requires:	python-modules >= 1:2.7
 Requires:	python-mpmath
 Requires:	python-pyglet
 BuildArch:	noarch
@@ -47,10 +59,18 @@ while keeping the code as simple as possible in order to be
 comprehensible and easily extensible. SymPy is written entirely in
 Python and does not require any external libraries.
 
+%description -l pl.UTF-8
+SymPy ma być w pełni funkcjonalnym systemem algebry komputerowej
+(CAS), a jednocześnie mieć jak najprostszy, czytelny i łatwo
+rozszerzalny kod. Jest pisany całkowicie w Pythonie i nie wymaga
+żadnych zewnętrznych bibliotek.
+
 %package -n python3-sympy
-Summary:	A Python3 library for symbolic mathematics
+Summary:	Python 3 library for symbolic mathematics
+Summary(pl.UTF-8):	Biblioteka Pythona 3 do matematyki symbolicznej
 Group:		Libraries/Python
 Requires:	python3-matplotlib
+Requires:	python3-modules >= 1:3.4
 Requires:	python3-mpmath
 Requires:	python3-pyglet
 
@@ -60,13 +80,22 @@ while keeping the code as simple as possible in order to be
 comprehensible and easily extensible. SymPy is written entirely in
 Python and does not require any external libraries.
 
+%description -n python3-sympy -l pl.UTF-8
+SymPy ma być w pełni funkcjonalnym systemem algebry komputerowej
+(CAS), a jednocześnie mieć jak najprostszy, czytelny i łatwo
+rozszerzalny kod. Jest pisany całkowicie w Pythonie i nie wymaga
+żadnych zewnętrznych bibliotek.
+
 %package doc
-Summary:	Documentation for sympy
-Group:		Libraries/Python
-Requires:	%{name} = %{version}-%{release}
+Summary:	Documentation for SymPy module
+Summary(pl.UTF-8):	Dokumentacja do SymPy
+Group:		Documentation
 
 %description doc
-HTML documentation for sympy.
+HTML documentation for SymPy.
+
+%description doc -l pl.UTF-8
+Dokumentacja do SymPy w formacie HTML.
 
 %prep
 %setup -q -n sympy-%{version}
@@ -81,10 +110,11 @@ HTML documentation for sympy.
 %py3_build %{?with_tests:test}
 %endif
 
-# Build the documentation
+%if %{with doc}
 cd doc
 %{__make} html
 %{__make} cheatsheet
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -107,28 +137,39 @@ find $RPM_BUILD_ROOT%{_examplesdir}/python3-sympy-%{version} -name '*.py' \
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+find $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} -name '*.py' \
+	| xargs sed -i '1s|^#!.*python\b|#!%{__python}|'
 %endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS LICENSE PKG-INFO doc/_build/cheatsheet/cheatsheet.pdf
+%doc AUTHORS LICENSE README.rst
 %attr(755,root,root) %{_bindir}/isympy
+%{py_sitescriptdir}/isympy.py[co]
 %{py_sitescriptdir}/sympy
 %{py_sitescriptdir}/sympy-%{version}-*.egg-info
 %{_mandir}/man1/isympy.1*
 %{_examplesdir}/%{name}-%{version}
+%endif
 
+%if %{with python3}
 %files -n python3-sympy
 %defattr(644,root,root,755)
-%doc AUTHORS LICENSE PKG-INFO doc/_build/cheatsheet/cheatsheet.pdf
+%doc AUTHORS LICENSE README.rst
 %attr(755,root,root) %{_bindir}/isympy3
+%{py3_sitescriptdir}/isympy.py
+%{py3_sitescriptdir}/__pycache__/isympy.cpython-*.py[co]
 %{py3_sitescriptdir}/sympy
 %{py3_sitescriptdir}/sympy-%{version}-*.egg-info
 %{_examplesdir}/python3-sympy-%{version}
+%endif
 
+%if %{with doc}
 %files doc
 %defattr(644,root,root,755)
-%doc doc/_build/html/*
+%doc doc/_build/html/* doc/_build/cheatsheet/cheatsheet.pdf
+%endif

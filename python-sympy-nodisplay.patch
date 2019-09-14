@@ -1,0 +1,24 @@
+--- sympy-1.4/sympy/utilities/runtests.py.orig	2019-04-10 02:31:59.000000000 +0200
++++ sympy-1.4/sympy/utilities/runtests.py	2019-09-13 16:13:57.588571573 +0200
+@@ -521,7 +521,9 @@
+     split = kwargs.get('split', None)
+     time_balance = kwargs.get('time_balance', True)
+     blacklist = kwargs.get('blacklist', ['sympy/integrals/rubi/rubi_tests/tests'])
+-    if ON_TRAVIS:
++    if ON_TRAVIS or os.getenv('DISPLAY', '') == '':
+         # pyglet does not work on Travis
++        blacklist.extend('sympy/categories/tests/test_drawing.py')
++        blacklist.extend('sympy/printing/tests/test_preview.py')
+         blacklist.extend('sympy/plotting/pygletplot/tests')
+     blacklist = convert_to_native_paths(blacklist)
+@@ -698,7 +698,9 @@
+             import matplotlib
+             matplotlib.use('Agg')
+ 
+-    if ON_TRAVIS or import_module('pyglet') is None:
++    if ON_TRAVIS or os.getenv('DISPLAY', '') == '' or import_module('pyglet') is None:
++        blacklist.extend(["sympy/categories/diagram_drawing.py"])
++        blacklist.extend(["sympy/printing/preview.py"])
+         blacklist.extend(["sympy/plotting/pygletplot"])
+ 
+     if import_module('theano') is None:
