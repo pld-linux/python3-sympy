@@ -41,7 +41,8 @@ BuildRequires:	python3-numpy
 %endif
 %if %{with doc}
 BuildRequires:	pydoc3
-BuildRequires:	sphinx-pdg
+BuildRequires:	python3-matplotlib
+BuildRequires:	sphinx-pdg-3
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
 BuildRequires:	texlive-latex-pgf
@@ -112,7 +113,8 @@ Dokumentacja do SymPy w formacie HTML.
 
 %if %{with doc}
 cd doc
-%{__make} html
+%{__make} html \
+	SPHINXBUILD=sphinx-build-3
 %{__make} cheatsheet
 %endif
 
