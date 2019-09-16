@@ -46,6 +46,7 @@ BuildRequires:	python3-mpmath >= 0.19
 BuildRequires:	sphinx-pdg-3
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
+BuildRequires:	texlive-latex-ams
 BuildRequires:	texlive-latex-pgf
 %endif
 Requires:	python-matplotlib
