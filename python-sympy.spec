@@ -16,6 +16,10 @@ Group:		Libraries/Python
 Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy-%{version}.tar.gz
 # Source0-md5:	478072d75b564c9356990e3027d464e6
 Patch0:		%{name}-nodisplay.patch
+Patch1:		0001-Exception-changed-after-numpy-1.17.patch
+Patch2:		0001-Fix-more-compatibility-issues-with-Python3.8.patch
+Patch3:		0001-Modify-literal-comparisons-as-per-python3.8-guidelines.patch
+Patch4:		sympy-is.patch
 URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
@@ -103,6 +107,10 @@ Dokumentacja do SymPy w formacie HTML.
 %prep
 %setup -q -n sympy-%{version}
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
 %if %{with python2}

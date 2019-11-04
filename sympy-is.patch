@@ -1,0 +1,11 @@
+--- sympy-sympy-1.4/sympy/plotting/plot.py.orig	2019-09-13 11:48:00.776818488 -0600
++++ sympy-sympy-1.4/sympy/plotting/plot.py	2019-09-13 11:49:54.122923162 -0600
+@@ -526,7 +526,7 @@ class LineOver1DRangeSeries(Line2DBaseSe
+                 else:
+                     list_segments.append([p, q])
+ 
+-            if self.xscale is 'log':
++            if self.xscale == 'log':
+                 self.start=np.log10(self.start)
+                 self.end=np.log10(self.end)
+ 
