@@ -8,18 +8,14 @@
 Summary:	Python 2 library for symbolic mathematics
 Summary(pl.UTF-8):	Biblioteka Pythona 2 do matematyki symbolicznej
 Name:		python-sympy
-Version:	1.4
-Release:	3
+Version:	1.5.1
+Release:	1
 License:	BSD
 Group:		Libraries/Python
-#Source0Download: https://github.com/sympy/sympy/releases
-Source0:	https://github.com/sympy/sympy/releases/download/sympy-%{version}/sympy-%{version}.tar.gz
-# Source0-md5:	478072d75b564c9356990e3027d464e6
+#Source0Download: https://pypi.org/simple/sympy/
+Source0:	https://files.pythonhosted.org/packages/source/s/sympy/sympy-%{version}.tar.gz
+# Source0-md5:	b11b310c3e1642bf66e51038cb3c0021
 Patch0:		%{name}-nodisplay.patch
-Patch1:		0001-Exception-changed-after-numpy-1.17.patch
-Patch2:		0001-Fix-more-compatibility-issues-with-Python3.8.patch
-Patch3:		0001-Modify-literal-comparisons-as-per-python3.8-guidelines.patch
-Patch4:		sympy-is.patch
 URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
@@ -35,7 +31,7 @@ BuildRequires:	python-numpy
 %endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel >= 1:3.4
+BuildRequires:	python3-devel >= 1:3.5
 BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-devel-tools
@@ -47,6 +43,7 @@ BuildRequires:	python3-numpy
 BuildRequires:	pydoc3
 BuildRequires:	python3-matplotlib
 BuildRequires:	python3-mpmath >= 0.19
+BuildRequires:	python3-sphinx_math_dollar
 BuildRequires:	sphinx-pdg-3
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
@@ -55,7 +52,6 @@ BuildRequires:	texlive-latex-pgf
 %endif
 Requires:	python-matplotlib
 Requires:	python-modules >= 1:2.7
-Requires:	python-mpmath
 Requires:	python-pyglet
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -77,8 +73,7 @@ Summary:	Python 3 library for symbolic mathematics
 Summary(pl.UTF-8):	Biblioteka Pythona 3 do matematyki symbolicznej
 Group:		Libraries/Python
 Requires:	python3-matplotlib
-Requires:	python3-modules >= 1:3.4
-Requires:	python3-mpmath
+Requires:	python3-modules >= 1:3.5
 Requires:	python3-pyglet
 
 %description -n python3-sympy
@@ -107,10 +102,6 @@ Dokumentacja do SymPy w formacie HTML.
 %prep
 %setup -q -n sympy-%{version}
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
 %if %{with python2}
@@ -185,5 +176,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 %files doc
 %defattr(644,root,root,755)
-%doc doc/_build/html/* doc/_build/cheatsheet/cheatsheet.pdf
+%doc doc/_build/html/{_images,_static,modules,pics,special_topics,tutorial,*.html,*.js} doc/_build/cheatsheet/cheatsheet.pdf
 %endif
