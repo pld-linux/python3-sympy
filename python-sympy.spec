@@ -45,6 +45,8 @@ BuildRequires:	python3-matplotlib
 BuildRequires:	python3-mpmath >= 0.19
 BuildRequires:	python3-sphinx_math_dollar
 BuildRequires:	sphinx-pdg-3
+# for cmex/fmex9.pfb
+BuildRequires:	texlive-fonts-other
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
 BuildRequires:	texlive-latex-ams
