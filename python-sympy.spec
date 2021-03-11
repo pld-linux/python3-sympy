@@ -2,20 +2,19 @@
 # Conditional build:
 %bcond_without	doc	# HTML and PDF documentation
 %bcond_without	tests	# unit tests
-%bcond_without	python2 # CPython 2.x module
+%bcond_with	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
 Summary:	Python 2 library for symbolic mathematics
 Summary(pl.UTF-8):	Biblioteka Pythona 2 do matematyki symbolicznej
 Name:		python-sympy
-Version:	1.5.1
+Version:	1.7.1
 Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/sympy/
 Source0:	https://files.pythonhosted.org/packages/source/s/sympy/sympy-%{version}.tar.gz
-# Source0-md5:	b11b310c3e1642bf66e51038cb3c0021
-Patch0:		%{name}-nodisplay.patch
+# Source0-md5:	f5973bcbe33fdc86203ca397cc901994
 URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
@@ -103,7 +102,6 @@ Dokumentacja do SymPy w formacie HTML.
 
 %prep
 %setup -q -n sympy-%{version}
-%patch0 -p1
 
 %build
 %if %{with python2}
