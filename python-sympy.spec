@@ -15,6 +15,7 @@ Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/sympy/
 Source0:	https://files.pythonhosted.org/packages/source/s/sympy/sympy-%{version}.tar.gz
 # Source0-md5:	f5973bcbe33fdc86203ca397cc901994
+Patch0:		docs-build.patch
 URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
@@ -39,6 +40,7 @@ BuildRequires:	python3-numpy
 %endif
 %endif
 %if %{with doc}
+BuildRequires:	fonts-TTF-DejaVu
 BuildRequires:	pydoc3
 BuildRequires:	python3-matplotlib
 BuildRequires:	python3-mpmath >= 0.19
@@ -102,6 +104,7 @@ Dokumentacja do SymPy w formacie HTML.
 
 %prep
 %setup -q -n sympy-%{version}
+%patch0 -p1
 
 %build
 %if %{with python2}
@@ -152,24 +155,24 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS LICENSE README.rst
+%doc AUTHORS LICENSE README.md
 %attr(755,root,root) %{_bindir}/isympy
 %{py_sitescriptdir}/isympy.py[co]
 %{py_sitescriptdir}/sympy
 %{py_sitescriptdir}/sympy-%{version}-*.egg-info
-%{_mandir}/man1/isympy.1*
 %{_examplesdir}/%{name}-%{version}
 %endif
 
 %if %{with python3}
 %files -n python3-sympy
 %defattr(644,root,root,755)
-%doc AUTHORS LICENSE README.rst
+%doc AUTHORS LICENSE README.md
 %attr(755,root,root) %{_bindir}/isympy3
 %{py3_sitescriptdir}/isympy.py
 %{py3_sitescriptdir}/__pycache__/isympy.cpython-*.py[co]
 %{py3_sitescriptdir}/sympy
 %{py3_sitescriptdir}/sympy-%{version}-*.egg-info
+%{_mandir}/man1/isympy.1*
 %{_examplesdir}/python3-sympy-%{version}
 %endif
 

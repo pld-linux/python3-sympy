@@ -1,0 +1,10 @@
+--- sympy-1.7.1/doc/Makefile~	2020-11-18 01:03:10.000000000 +0100
++++ sympy-1.7.1/doc/Makefile	2021-03-12 09:34:45.978437636 +0100
+@@ -44,7 +44,6 @@
+ 	-rm -rf sphinx
+ 	-rm -f $(PDFFILES)
+ 
+-html: SPHINXOPTS += -W --keep-going
+ html: _build/logo/sympy-notailtext-favicon.ico
+ 	mkdir -p src/.static
+ 	mkdir -p _build/html
