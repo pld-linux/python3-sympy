@@ -9,7 +9,7 @@ Summary:	Python 2 library for symbolic mathematics
 Summary(pl.UTF-8):	Biblioteka Pythona 2 do matematyki symbolicznej
 Name:		python-sympy
 Version:	1.7.1
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/sympy/
