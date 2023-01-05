@@ -1,10 +1,10 @@
---- sympy-1.7.1/doc/Makefile~	2020-11-18 01:03:10.000000000 +0100
-+++ sympy-1.7.1/doc/Makefile	2021-03-12 09:34:45.978437636 +0100
-@@ -44,7 +44,6 @@
- 	-rm -rf sphinx
- 	-rm -f $(PDFFILES)
- 
--html: SPHINXOPTS += -W --keep-going
- html: _build/logo/sympy-notailtext-favicon.ico
- 	mkdir -p src/.static
- 	mkdir -p _build/html
+--- sympy-1.11.1/doc/Makefile.orig	2023-01-04 19:37:36.910055980 +0100
++++ sympy-1.11.1/doc/Makefile	2023-01-04 19:42:23.068505727 +0100
+@@ -60,7 +60,6 @@ html:
+ # Force colors on CI. Set NO_COLOR=1 on the command line to disable this.
+ _html: export FORCE_COLOR = 1
+ _html: $(BUILDDIR)/html/pics/*.png
+-_html: SPHINXOPTS += -W --keep-going
+ _html: $(BUILDDIR)/logo/sympy-notailtext-favicon.ico
+ 	mkdir -p $(SOURCEDIR)/.static
+ 	mkdir -p $(BUILDDIR)/html
