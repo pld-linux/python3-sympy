@@ -14,6 +14,7 @@ Group:		Libraries/Python
 Source0:	https://files.pythonhosted.org/packages/source/s/sympy/sympy-%{version}.tar.gz
 # Source0-md5:	232141d248ab4164e92c8ac59a996914
 Patch0:		docs-build.patch
+Patch1:		sympy-nodisplay.patch
 URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
@@ -29,9 +30,14 @@ BuildRequires:	sed >= 4.0
 %if %{with doc}
 BuildRequires:	fonts-TTF-DejaVu
 BuildRequires:	pydoc3
+BuildRequires:	python3-furo
+BuildRequires:	python3-linkify-it-py
 BuildRequires:	python3-matplotlib
 BuildRequires:	python3-mpmath >= 0.19
+BuildRequires:	python3-myst-parser
+BuildRequires:	python3-sphinx_copybutton
 BuildRequires:	python3-sphinx_math_dollar
+BuildRequires:	python3-sphinx_reredirects
 BuildRequires:	sphinx-pdg-3
 # for cmex/fmex9.pfb
 BuildRequires:	texlive-fonts-other
@@ -74,6 +80,7 @@ Dokumentacja do SymPy w formacie HTML.
 %prep
 %setup -q -n sympy-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %py3_build %{?with_tests:test}
