@@ -34,9 +34,9 @@ BuildRequires:	python3-furo
 BuildRequires:	python3-linkify-it-py
 BuildRequires:	python3-matplotlib
 BuildRequires:	python3-mpmath >= 0.19
-BuildRequires:	python3-myst-parser
+BuildRequires:	python3-myst_parser
 BuildRequires:	python3-sphinx_copybutton
-BuildRequires:	python3-sphinx_math_dollar
+BuildRequires:	python3-sphinx_math_dollar >= 1.2.1
 BuildRequires:	python3-sphinx_reredirects
 BuildRequires:	sphinx-pdg-3
 # for cmex/fmex9.pfb
