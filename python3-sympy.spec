@@ -69,7 +69,7 @@ rozszerzalny kod. Jest pisany całkowicie w Pythonie i nie wymaga
 Summary:	Documentation for SymPy module
 Summary(pl.UTF-8):	Dokumentacja do SymPy
 Group:		Documentation
-Obsoletes:	python-sympy-doc == 1.7.1
+Obsoletes:	python-sympy-doc = 1.7.1
 
 %description doc
 HTML documentation for SymPy.
@@ -79,8 +79,8 @@ Dokumentacja do SymPy w formacie HTML.
 
 %prep
 %setup -q -n sympy-%{version}
-%patch0 -p1
-%patch1 -p1
+%patch -P 0 -p1
+%patch -P 1 -p1
 
 %build
 %py3_build %{?with_tests:test}
