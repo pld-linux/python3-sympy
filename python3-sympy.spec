@@ -7,7 +7,7 @@ Summary:	Python 3 library for symbolic mathematics
 Summary(pl.UTF-8):	Biblioteka Pythona 3 do matematyki symbolicznej
 Name:		python3-sympy
 Version:	1.11.1
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/sympy/
