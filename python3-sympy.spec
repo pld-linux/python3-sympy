@@ -6,15 +6,14 @@
 Summary:	Python 3 library for symbolic mathematics
 Summary(pl.UTF-8):	Biblioteka Pythona 3 do matematyki symbolicznej
 Name:		python3-sympy
-Version:	1.11.1
-Release:	3
+Version:	1.14.0
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/sympy/
 Source0:	https://files.pythonhosted.org/packages/source/s/sympy/sympy-%{version}.tar.gz
-# Source0-md5:	232141d248ab4164e92c8ac59a996914
+# Source0-md5:	9872deb5bd7816dfbc89bec086b9e522
 Patch0:		docs-build.patch
-Patch1:		sympy-nodisplay.patch
 URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
@@ -31,6 +30,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	fonts-TTF-DejaVu
 BuildRequires:	pydoc3
 BuildRequires:	python3-furo
+BuildRequires:	python3-intersphinx_registry
 BuildRequires:	python3-linkify-it-py
 BuildRequires:	python3-matplotlib
 BuildRequires:	python3-mpmath >= 0.19
@@ -80,9 +80,10 @@ Dokumentacja do SymPy w formacie HTML.
 %prep
 %setup -q -n sympy-%{version}
 %patch -P 0 -p1
-%patch -P 1 -p1
 
 %build
+# some tests (for example such that require GUI) are not run on their CI systems, so use that
+export CI=true
 %py3_build %{?with_tests:test}
 
 %if %{with doc}
@@ -101,11 +102,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/isympy{,3}
 
-install -d $RPM_BUILD_ROOT%{_examplesdir}/python3-sympy-%{version}
-cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/python3-sympy-%{version}
-find $RPM_BUILD_ROOT%{_examplesdir}/python3-sympy-%{version} -name '*.py' \
-	| xargs sed -i '1s|^#!.*python\b|#!%{__python3}|'
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -118,7 +114,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitescriptdir}/sympy
 %{py3_sitescriptdir}/sympy-%{version}-*.egg-info
 %{_mandir}/man1/isympy.1*
-%{_examplesdir}/python3-sympy-%{version}
 
 %if %{with doc}
 %files doc
