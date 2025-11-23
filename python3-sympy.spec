@@ -14,15 +14,18 @@ Group:		Libraries/Python
 Source0:	https://files.pythonhosted.org/packages/source/s/sympy/sympy-%{version}.tar.gz
 # Source0-md5:	9872deb5bd7816dfbc89bec086b9e522
 Patch0:		docs-build.patch
+Patch1:		sympy-tests.patch
 URL:		https://www.sympy.org/
 BuildRequires:	gettext
 BuildRequires:	graphviz
-BuildRequires:	python3-devel >= 1:3.8
+BuildRequires:	python3-devel >= 1:3.9
 BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-devel-tools
-BuildRequires:	python3-mpmath >= 0.19
+BuildRequires:	python3-hypothesis >= 6.70.0
+BuildRequires:	python3-mpmath >= 1.1.0
 BuildRequires:	python3-numpy
+BuildRequires:	python3-pytest >= 7.1.0
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	sed >= 4.0
@@ -33,7 +36,7 @@ BuildRequires:	python3-furo
 BuildRequires:	python3-intersphinx_registry
 BuildRequires:	python3-linkify-it-py
 BuildRequires:	python3-matplotlib
-BuildRequires:	python3-mpmath >= 0.19
+BuildRequires:	python3-mpmath >= 1.1.0
 BuildRequires:	python3-myst_parser
 BuildRequires:	python3-sphinx_copybutton
 BuildRequires:	python3-sphinx_math_dollar >= 1.2.1
@@ -47,7 +50,7 @@ BuildRequires:	texlive-latex-ams
 BuildRequires:	texlive-latex-pgf
 %endif
 Requires:	python3-matplotlib
-Requires:	python3-modules >= 1:3.8
+Requires:	python3-modules >= 1:3.9
 Requires:	python3-pyglet
 Conflicts:	python-sympy < 1.5.1-2
 BuildArch:	noarch
@@ -79,20 +82,26 @@ Dokumentacja do SymPy w formacie HTML.
 
 %prep
 %setup -q -n sympy-%{version}
-%patch -P 0 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 
 %build
-# some tests (for example such that require GUI) are not run on their CI systems, so use that
-export CI=true
-%py3_build %{?with_tests:test}
+# setup.py test no longer runs pytest-parameterized cases properly, use invocation by pytest instead
+%py3_build
+
+%if %{with tests}
+# test_plotting requires DISPLAY
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+%{__python3} -m pytest sympy --ignore sympy/plotting/pygletplot/tests/test_plotting.py
+%endif
 
 %if %{with doc}
-pydir=$(pwd)/build-3/lib
-cd doc
-PYTHONPATH=$pydir \
-%{__make} html \
+PYTHONPATH=$(pwd)/build-3/lib \
+%{__make} -C doc html \
+	PYTHON=%{__python3} \
 	SPHINXBUILD=sphinx-build-3
-%{__make} cheatsheet
+
+%{__make} -C doc cheatsheet
 %endif
 
 %install

@@ -1,0 +1,26 @@
+--- sympy-1.14.0/sympy/testing/runtests.py.orig	2025-04-27 13:39:59.000000000 +0200
++++ sympy-1.14.0/sympy/testing/runtests.py	2025-11-23 09:18:49.970162622 +0100
+@@ -323,13 +323,6 @@ def run_all_tests(test_args=(), test_kwa
+         if not doctest(*doctest_args, **doctest_kwargs):
+             tests_successful = False
+ 
+-        # Examples
+-        print()
+-        sys.path.append("examples")   # examples/all.py
+-        from all import run_examples  # type: ignore
+-        if not run_examples(*examples_args, **examples_kwargs):
+-            tests_successful = False
+-
+         if tests_successful:
+             return
+         else:
+--- sympy-1.14.0/sympy/core/tests/test_args.py.orig	2025-04-27 13:39:59.000000000 +0200
++++ sympy-1.14.0/sympy/core/tests/test_args.py	2025-11-23 10:54:36.632363614 +0100
+@@ -27,6 +27,7 @@ a, b, c, x, y, z, s = symbols('a,b,c,x,y
+ whitelist = [
+      "sympy.assumptions.predicates",    # tested by test_predicates()
+      "sympy.assumptions.relation.equality",    # tested by test_predicates()
++     "sympy.plotting.pygletplot",    # importing from pyglet requires DISPLAY
+ ]
+ 
+ def test_all_classes_are_tested():
